@@ -21,7 +21,13 @@ namespace CertOps.Services
         public void InitAcmeContext()
         {
             var basePath = Path.Combine(_config.AccountConfig.AccountKeyPath, "accounts");
+
+            if (Directory.Exists(basePath) == false)
+            {
+                Directory.CreateDirectory(basePath);
+            }
             var path = Path.Combine(basePath, "account-key.pem");
+
             if (File.Exists(path))
             {
                 var key = KeyFactory.FromPem(File.ReadAllText(path));
@@ -33,8 +39,16 @@ namespace CertOps.Services
                 _acmeContext = new AcmeContext(WellKnownServers.LetsEncryptV2, key);
                 var accountContext = _acmeContext.NewAccount(_config.AccountConfig.Email, true).GetResult();
                 var accountUrl = accountContext.Location;
-                File.WriteAllText(Path.Combine(basePath, "account-url.txt"), accountUrl.ToString());
-                File.WriteAllText(path, key.ToPem());
+
+                {
+                    using var fs = new StreamWriter(File.Open(Path.Combine(basePath, "account-url.txt"), FileMode.OpenOrCreate));
+                    fs.WriteAsync(accountUrl.ToString()).GetResult();
+                }
+
+                {
+                    using var fs = new StreamWriter(File.Open(path, FileMode.OpenOrCreate));
+                    fs.WriteAsync(key.ToPem()).GetResult();
+                }
             }
         }
         public async Task IssueCertificateAsync(IOrderContext order, string domain)
@@ -48,9 +62,9 @@ namespace CertOps.Services
 
             var certPem = cert.ToPem();
             var keyPem = key.ToPem();
-            if (System.IO.Directory.Exists(_config.OutCertificatePath) == false)
+            if (Directory.Exists(_config.OutCertificatePath) == false)
             {
-                System.IO.Directory.CreateDirectory(_config.OutCertificatePath);
+                Directory.CreateDirectory(_config.OutCertificatePath);
             }
             var pemPath = Path.Combine(_config.OutCertificatePath, domain);
             try
@@ -68,7 +82,7 @@ namespace CertOps.Services
                     using var writer = new StreamWriter(File.Open(path, FileMode.OpenOrCreate));
 
                     writer.AutoFlush = true;
-                    await writer.WriteAsync(certPem);
+                    await writer.WriteAsync(keyPem);
                 }
             }
             catch (Exception ex)

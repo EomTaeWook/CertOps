@@ -1,0 +1,16 @@
+services:
+  certops:
+    image: trim0917/certops:latest
+    volumes:
+      - type: bind
+        source: ./log
+        target: /App/log
+      - type: bind
+        source: ./log/archive
+        target: /App/archive
+      - type: bind
+        source: ./config.json
+        target: /App/config.json
+    restart: always
+    stdin_open : true
+    tty: true

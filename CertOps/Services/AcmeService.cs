@@ -20,8 +20,8 @@ namespace CertOps.Services
         }
         public void InitAcmeContext()
         {
-            var keyFileName = Path.Combine("accounts", "account-key.pem");
-            var path = Path.Combine(_config.AccountConfig.AccountKeyPath, keyFileName);
+            var basePath = Path.Combine(_config.AccountConfig.AccountKeyPath, "accounts");
+            var path = Path.Combine(basePath, "account-key.pem");
             if (File.Exists(path))
             {
                 var key = KeyFactory.FromPem(File.ReadAllText(path));
@@ -33,7 +33,7 @@ namespace CertOps.Services
                 _acmeContext = new AcmeContext(WellKnownServers.LetsEncryptV2, key);
                 var accountContext = _acmeContext.NewAccount(_config.AccountConfig.Email, true).GetResult();
                 var accountUrl = accountContext.Location;
-                File.WriteAllText(Path.Combine(_config.AccountConfig.AccountKeyPath, "account-url.txt"), accountUrl.ToString());
+                File.WriteAllText(Path.Combine(basePath, "account-url.txt"), accountUrl.ToString());
                 File.WriteAllText(path, key.ToPem());
             }
         }

@@ -14,6 +14,5 @@ COPY --from=build /App/out .
 
 VOLUME ["/App/log"]
 VOLUME ["/App/archive"]
-VOLUME ["/App/config.json"]
 
 ENTRYPOINT ["dotnet", "CertOps.dll"]

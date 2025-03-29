@@ -62,11 +62,14 @@ namespace CertOps.Services
 
             var certPem = cert.ToPem();
             var keyPem = key.ToPem();
-            if (Directory.Exists(_config.OutCertificatePath) == false)
-            {
-                Directory.CreateDirectory(_config.OutCertificatePath);
-            }
+
             var pemPath = Path.Combine(_config.OutCertificatePath, domain);
+
+            if (Directory.Exists(pemPath) == false)
+            {
+                Directory.CreateDirectory(pemPath);
+            }
+
             try
             {
                 {

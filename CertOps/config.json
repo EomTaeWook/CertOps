@@ -1,0 +1,22 @@
+{
+  "ScheduleDelayMilliseconds": 60000,
+  "AcmeConfig": {
+    "Domains": [
+      "",
+      ""
+    ],
+    "OutCertificatePath": "./live/",
+    "AccountConfig": {
+      "Email": "",
+      "AccountKeyPath": ""
+    }
+  },
+  "AzureConfig": {
+    "TenantId": "",
+    "ClientId": "",
+    "ClientSecret": "",
+    "AzureSubscriptionId": "",
+    "AzureResourceGroup": "",
+    "AzureDnsZone": ""
+  }
+}

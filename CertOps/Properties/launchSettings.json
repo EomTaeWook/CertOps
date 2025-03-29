@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ACMEClient": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Stage": "local"
+      }
+    }
+  }
+}
